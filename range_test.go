@@ -1,6 +1,7 @@
 package RangeList
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -35,4 +36,15 @@ func TestRangeList(t *testing.T) {
 	// Should display: [1, 8) [11, 15) [17, 21)
 	rl.Remove([2]int{3, 19})
 	rl.Print() // Should display: [1, 3) [19, 21)
+}
+
+func TestBin(t *testing.T) {
+	rl := RangeList{rl: []section{}}
+	rl.Add([2]int{1, 5})
+	rl.Add([2]int{7, 11})
+	rl.Add([2]int{20, 25})
+
+	index, res := rl.locate(6)
+	fmt.Println(index, res)
+
 }

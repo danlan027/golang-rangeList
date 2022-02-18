@@ -74,8 +74,8 @@ func (r *RangeList) Remove(rangeElement [2]int) error {
 	if left > right {
 		return errors.New("element error")
 	}
-	leftLoc, leftLocRes := r.locate(left)
-	rightLoc, rightLocRes := r.locate(right)
+	leftLoc, leftLocRes := r.binLocate(left)
+	rightLoc, rightLocRes := r.binLocate(right)
 	if leftLoc == rightLoc {
 		//一个子区间内操作，只需改变子区间边界，无需裁剪切片
 		if leftLoc == -1 || leftLoc == len(r.rl) || left == right {
@@ -150,6 +150,41 @@ func (r *RangeList) locate(e int) (int, bool) {
 			return i+1, false
 		}
 	}
+	return -1, false
+}
+
+// 二分查找法定位元素子区间位置，查找效率由n优化为logN
+func (r *RangeList) binLocate(e int) (int, bool) {
+	curL := len(r.rl)
+	if e < r.rl[0].left {
+		return -1, false
+	}
+	if e > r.rl[curL-1].right {
+		return curL, false
+	}
+
+	return binSearch(r.rl, e)
+}
+
+// 二分查找
+func binSearch(secs []section, target int) (int, bool) {
+	left, right := 0, len(secs)-1
+	for left <= right {
+		mid := (left+right)/2
+		if target >= secs[mid].left && target <= secs[mid].right {
+			return mid, true
+		}
+		if target > secs[mid].right && target < secs[mid+1].left {
+			return mid+1, false
+		}
+		if target < secs[mid].left {
+			right = mid-1
+		}
+		if target > secs[mid].right {
+			left = mid+1
+		}
+	}
+
 	return -1, false
 }
 
