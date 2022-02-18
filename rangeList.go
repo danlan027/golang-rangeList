@@ -24,8 +24,8 @@ func (r *RangeList) Add(rangeElement [2]int) error {
 		return nil
 	}
 
-	leftLoc, leftLocRes := r.locate(left)
-	rightLoc, rightLocRes := r.locate(right)
+	leftLoc, leftLocRes := r.binLocate(left)
+	rightLoc, rightLocRes := r.binLocate(right)
 
 	if leftLoc == rightLoc {
 		//一个子区间内操作，只需改变子区间边界，无需裁剪切片
